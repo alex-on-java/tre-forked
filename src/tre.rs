@@ -6,6 +6,7 @@ use crate::output;
 use crate::path_finders;
 use lscolors::LsColors;
 use regex::Regex;
+use std::io::IsTerminal;
 
 #[derive(Debug, Clone)]
 pub enum Mode {
@@ -71,7 +72,7 @@ impl From<cli::Interface> for RunOptions {
 
 pub fn run(option: RunOptions) {
     let directories_only = option.directories_only;
-    let max_depth = option.max_depth.unwrap_or(std::usize::MAX);
+    let max_depth = option.max_depth.unwrap_or(usize::MAX);
     let paths: Vec<(String, FileType)> = match option.mode {
         Mode::FollowGitIgnore => {
             path_finders::find_non_git_ignored_paths(&option.root, directories_only, max_depth)
@@ -106,7 +107,7 @@ pub fn run(option: RunOptions) {
             cli::Coloring::Never => None,
             cli::Coloring::Always => Some(&lscolors),
             cli::Coloring::Automatic => {
-                if atty::is(atty::Stream::Stdout) {
+                if std::io::stdout().is_terminal() {
                     Some(&lscolors)
                 } else {
                     None
