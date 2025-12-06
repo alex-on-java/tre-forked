@@ -31,7 +31,7 @@ enum SerializableTreeNode<'a> {
 }
 
 impl SerializableTreeNode<'_> {
-    pub fn new(tree: &FileTree) -> SerializableTreeNode {
+    pub fn new(tree: &FileTree) -> SerializableTreeNode<'_> {
         SerializableTreeNode::from(tree, &tree.storage[tree.root_id])
     }
 

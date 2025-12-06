@@ -2,7 +2,7 @@
 name = "tre-command"
 version = "0.4.0"
 authors = ["Daniel Duan <daniel@duan.ca>"]
-edition = "2018"
+edition = "2021"
 license = "MIT"
 description = "Tree command, improved."
 documentation = "https://github.com/dduan/tre/blob/master/README.md"
@@ -14,21 +14,19 @@ keywords = ["cli", "tool", "filesystem"]
 categories = ["command-line-utilities"]
 
 [dependencies]
-atty = "0.2"
-clap = { version = "3.1.8", features = ["derive"] }
-getopts = "0.2"
-indexmap = "1.9.0"
-lscolors = "0.10"
-regex = "1.5.5"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-slab = "0.4.2"
+clap = { version = "4", features = ["derive"] }
+indexmap = "2"
+lscolors = "0.21"
+regex = "1.11"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+slab = "0.4"
 termcolor = "1"
 walkdir = "2"
 
 [build-dependencies]
-clap = { version = "3.1.8", features = ["cargo"] }
-clap_complete = "3.1"
+clap = { version = "4", features = ["derive"] }
+clap_complete = "4"
 
 [dev-dependencies]
 assert_cmd = "2.0"

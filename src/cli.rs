@@ -1,6 +1,6 @@
-use clap::{ArgEnum, Parser};
+use clap::{Parser, ValueEnum};
 
-#[derive(ArgEnum, Clone, Debug, PartialEq)]
+#[derive(ValueEnum, Clone, Debug, PartialEq)]
 pub enum Coloring {
     Automatic,
     Always,
@@ -19,36 +19,36 @@ impl core::str::FromStr for Coloring {
 }
 
 #[derive(Debug, Clone, Parser)]
-#[clap(author, version, about)]
+#[command(author, version, about)]
 pub struct Interface {
     /// Print all files and directories, including hidden ones.
-    #[clap(long, short, parse(from_flag))]
+    #[arg(long, short)]
     pub all: bool,
     /// Use normal print despite gitignore settings. '-a' has higher priority.
     #[cfg(not(target_os = "windows"))]
-    #[clap(long, short, parse(from_flag))]
+    #[arg(long, short)]
     pub simple: bool,
     /// Only list directories in output.
-    #[clap(long, short, parse(from_flag))]
+    #[arg(long, short)]
     pub directories: bool,
     /// Create aliases for each displayed result, and add a number in front of file name to
     /// indicate the alias name. For example, a number "42" means an shell alias "e42" has been
     /// created. Running "e42" will cause the associated file or directory to be open with $EDITOR
     /// (or a default program for the file type on Windows), or a command specified along with this
     /// command.
-    #[clap(long, short, value_name = "COMMAND")]
+    #[arg(long, short, value_name = "COMMAND")]
     pub editor: Option<Option<String>>,
     /// Output JSON instead of tree diagram.
-    #[clap(long, short, parse(from_flag))]
+    #[arg(long, short)]
     pub json: bool,
     /// Limit depth of the tree in output.
-    #[clap(long, short)]
+    #[arg(long, short)]
     pub limit: Option<usize>,
     /// Exclude paths matching a regex pattern. Repeatable.
-    #[clap(long, short = 'E', value_name = "PATTERN")]
+    #[arg(long, short = 'E', value_name = "PATTERN")]
     pub exclude: Vec<String>,
-    #[clap(
-        arg_enum,
+    #[arg(
+        value_enum,
         long,
         short,
         value_name = "WHEN",
@@ -59,9 +59,9 @@ pub struct Interface {
     pub color: Coloring,
     /// Generate portable (absolute) paths for editor aliases. By default, aliases use relative
     /// paths for better performance.
-    #[clap(short, long)]
+    #[arg(short, long)]
     pub portable: bool,
-    #[clap(default_value = ".")]
+    #[arg(default_value = ".")]
     pub path: String,
 }
 
