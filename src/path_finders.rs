@@ -1,7 +1,25 @@
 use crate::file_tree::FileType;
+use std::path::Path;
 use std::process::Command;
 use std::{fs, path};
 use walkdir::{DirEntry, WalkDir};
+
+/// Only check paths that could be outside repo (absolute or contains ..)
+fn needs_repo_check(path: &str) -> bool {
+    Path::new(path).is_absolute() || path.contains("..")
+}
+
+/// Check if the given path is inside a git repository
+fn is_inside_git_repo(path: &str) -> bool {
+    Command::new("git")
+        .arg("-C")
+        .arg(path)
+        .arg("rev-parse")
+        .arg("--git-dir")
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+}
 
 pub fn find_all_paths(
     root: &str,
@@ -35,10 +53,15 @@ fn is_hidden(name: &str) -> bool {
 }
 
 fn should_include(entry: &DirEntry, root: &str) -> bool {
+    // Always include the root directory, even if it's hidden
+    if entry.path().to_str() == Some(root) {
+        return true;
+    }
+    // For other entries, exclude hidden files
     entry
         .file_name()
         .to_str()
-        .map(|s| !is_hidden(s) || s == root)
+        .map(|s| !is_hidden(s))
         .unwrap_or(true)
 }
 
@@ -74,6 +97,11 @@ pub fn find_non_git_ignored_paths(
     directories_only: bool,
     max_depth: usize,
 ) -> Vec<(String, FileType)> {
+    // Early return if path is outside any git repo
+    if needs_repo_check(root) && !is_inside_git_repo(root) {
+        return find_non_hidden_paths(root, directories_only, max_depth);
+    }
+
     let mut git_command = Command::new("git");
     if directories_only {
         git_command
@@ -120,4 +148,35 @@ pub fn find_non_git_ignored_paths(
     }
 
     find_non_hidden_paths(root, directories_only, max_depth)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_needs_repo_check() {
+        // Absolute paths should need checking
+        assert!(needs_repo_check("/absolute/path"));
+        assert!(needs_repo_check("/tmp"));
+
+        // Paths with .. should need checking
+        assert!(needs_repo_check("../parent"));
+        assert!(needs_repo_check("foo/../bar"));
+
+        // Simple relative paths should not need checking
+        assert!(!needs_repo_check("relative/path"));
+        assert!(!needs_repo_check("./current"));
+        assert!(!needs_repo_check("."));
+        assert!(!needs_repo_check("src"));
+    }
+
+    #[test]
+    fn test_is_inside_git_repo() {
+        // Current directory (this project) should be inside a git repo
+        assert!(is_inside_git_repo("."));
+
+        // /tmp should not be inside a git repo
+        assert!(!is_inside_git_repo("/tmp"));
+    }
 }
