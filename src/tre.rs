@@ -24,6 +24,8 @@ pub struct RunOptions {
     pub output_json: bool,
     pub root: String,
     pub max_depth: Option<usize>,
+    #[allow(dead_code)]
+    pub max_lines: Option<usize>,
     pub exclude_patterns: Vec<Regex>,
     pub coloring: cli::Coloring,
     pub portable_aliases: bool,
@@ -59,6 +61,7 @@ impl From<cli::Interface> for RunOptions {
             output_json: inputs.json,
             root: inputs.path,
             max_depth: inputs.limit,
+            max_lines: inputs.lines,
             exclude_patterns: inputs
                 .exclude
                 .iter()

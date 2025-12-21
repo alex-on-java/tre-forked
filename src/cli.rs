@@ -44,6 +44,9 @@ pub struct Interface {
     /// Limit depth of the tree in output.
     #[arg(long, short)]
     pub limit: Option<usize>,
+    /// Limit total number of lines in output (smart allocation).
+    #[arg(long, short = 'n')]
+    pub lines: Option<usize>,
     /// Exclude paths matching a regex pattern. Repeatable.
     #[arg(long, short = 'E', value_name = "PATTERN")]
     pub exclude: Vec<String>,
