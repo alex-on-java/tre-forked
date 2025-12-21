@@ -96,19 +96,26 @@ fn format_file(
     }
 }
 
+/// Format a pre-built FileTree into a list of FormattedEntry.
+/// Use this when you need to operate on the tree before formatting (e.g., for --lines).
+pub fn format_tree(tree: &FileTree, make_absolute: bool) -> Vec<FormattedEntry> {
+    let mut history = HashMap::new();
+    let mut result = Vec::new();
+    let root = tree.get_root();
+    format_file(tree, root, &mut history, &mut result, make_absolute);
+    result
+}
+
+/// Convenience function that builds a tree and formats it in one step.
+/// Primarily used for backwards compatibility and tests.
+#[allow(dead_code)]
 pub fn format_paths(
     root_path: &str,
     children: Vec<(String, FileType)>,
     make_absolute: bool,
 ) -> Vec<FormattedEntry> {
-    let mut history = HashMap::new();
-    let mut result = Vec::new();
     match FileTree::new(root_path, children) {
-        Some(tree) => {
-            let root = tree.get_root();
-            format_file(&tree, root, &mut history, &mut result, make_absolute);
-            result
-        }
+        Some(tree) => format_tree(&tree, make_absolute),
         None => Vec::new(),
     }
 }

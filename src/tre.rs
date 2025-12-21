@@ -1,6 +1,6 @@
 use crate::cli;
 use crate::diagram_formatting;
-use crate::file_tree::FileType;
+use crate::file_tree::{FileTree, FileType};
 use crate::json_formatting;
 use crate::output;
 use crate::path_finders;
@@ -24,6 +24,8 @@ pub struct RunOptions {
     pub output_json: bool,
     pub root: String,
     pub max_depth: Option<usize>,
+    #[allow(dead_code)]
+    pub max_lines: Option<usize>,
     pub exclude_patterns: Vec<Regex>,
     pub coloring: cli::Coloring,
     pub portable_aliases: bool,
@@ -59,6 +61,7 @@ impl From<cli::Interface> for RunOptions {
             output_json: inputs.json,
             root: inputs.path,
             max_depth: inputs.limit,
+            max_lines: inputs.lines,
             exclude_patterns: inputs
                 .exclude
                 .iter()
@@ -100,8 +103,16 @@ pub fn run(option: RunOptions) {
     if option.output_json {
         println!("{}", json_formatting::format_paths(&option.root, paths));
     } else {
-        let format_result =
-            diagram_formatting::format_paths(&option.root, paths, option.portable_aliases);
+        // Build tree early for future --lines support
+        let tree = match FileTree::new(&option.root, paths) {
+            Some(mut t) => {
+                t.compute_metadata();
+                t
+            }
+            None => return,
+        };
+
+        let format_result = diagram_formatting::format_tree(&tree, option.portable_aliases);
         let lscolors = LsColors::from_env().unwrap_or_default();
         let coloring = match option.coloring {
             cli::Coloring::Never => None,
