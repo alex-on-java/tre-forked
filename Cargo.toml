@@ -1,6 +1,6 @@
 [package]
 name = "tre-command"
-version = "0.4.0"
+version = "0.4.1"
 authors = ["Daniel Duan <daniel@duan.ca>"]
 edition = "2021"
 license = "MIT"
@@ -30,6 +30,7 @@ clap_complete = "4"
 
 [dev-dependencies]
 assert_cmd = "2.0"
+tempfile = "3"
 
 [[bin]]
 name = "tre"
