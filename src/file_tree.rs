@@ -131,10 +131,10 @@ impl FileTree {
         let root_entry = slab.vacant_entry();
         let root_id = root_entry.key();
 
-        let root_prefix_len: usize = Path::new(root_path)
+        let root_components: Vec<Component> = Path::new(root_path)
             .components()
             .filter(|c| !matches!(c, Component::CurDir))
-            .count();
+            .collect();
 
         let root = Box::new(File {
             id: root_id,
@@ -161,11 +161,20 @@ impl FileTree {
 
             let data = data_option.unwrap();
 
-            let mut ancestry: Vec<Component> = Path::new(&path)
+            let path_components: Vec<Component> = Path::new(&path)
                 .components()
                 .filter(|c| !matches!(c, Component::CurDir))
-                .skip(root_prefix_len)
                 .collect();
+
+            let mut ancestry: Vec<Component> = if path_components.starts_with(&root_components) {
+                path_components
+                    .iter()
+                    .skip(root_components.len())
+                    .cloned()
+                    .collect()
+            } else {
+                path_components.clone()
+            };
 
             let ancestor = ancestry.pop().map(|x| to_string(&x));
 
