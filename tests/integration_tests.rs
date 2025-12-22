@@ -1,25 +1,20 @@
-use std::process;
-use std::fs;
-use std::path::PathBuf;
-use std::error;
-use std::str;
 use assert_cmd::prelude::CommandCargoExt;
 use std::env;
+use std::error;
+use std::fs;
+use std::path::PathBuf;
+use std::process;
+use std::str;
 use tempfile::TempDir;
 
 #[test]
 fn respect_git_ignore() -> Result<(), Box<dyn error::Error>> {
     let mut tre = process::Command::cargo_bin("tre")?;
-    let fixture_path: PathBuf = [
-        env!("CARGO_MANIFEST_DIR"),
-        "fixtures",
-    ].iter().collect();
+    let fixture_path: PathBuf = [env!("CARGO_MANIFEST_DIR"), "fixtures"].iter().collect();
     // this path is ignored by fixtures/.gitignore
-    let ignored_path: PathBuf = [
-        env!("CARGO_MANIFEST_DIR"),
-        "fixtures",
-        "ignore_me"
-    ].iter().collect();
+    let ignored_path: PathBuf = [env!("CARGO_MANIFEST_DIR"), "fixtures", "ignore_me"]
+        .iter()
+        .collect();
     fs::write(ignored_path, "")?;
     env::set_current_dir(fixture_path)?;
     let output = tre.output()?.stdout;
@@ -42,16 +37,11 @@ fn respect_git_ignore() -> Result<(), Box<dyn error::Error>> {
 #[test]
 fn ignore_hidden() -> Result<(), Box<dyn error::Error>> {
     let mut tre = process::Command::cargo_bin("tre")?;
-    let fixture_path: PathBuf = [
-        env!("CARGO_MANIFEST_DIR"),
-        "fixtures",
-    ].iter().collect();
+    let fixture_path: PathBuf = [env!("CARGO_MANIFEST_DIR"), "fixtures"].iter().collect();
     // this path is ignored by fixtures/.gitignore, but we aren't using .gitignore
-    let ignored_path: PathBuf = [
-        env!("CARGO_MANIFEST_DIR"),
-        "fixtures",
-        "ignore_me"
-    ].iter().collect();
+    let ignored_path: PathBuf = [env!("CARGO_MANIFEST_DIR"), "fixtures", "ignore_me"]
+        .iter()
+        .collect();
     fs::write(ignored_path, "")?;
     env::set_current_dir(fixture_path)?;
     let output = tre.arg("-s").output()?.stdout;
@@ -73,16 +63,11 @@ fn ignore_hidden() -> Result<(), Box<dyn error::Error>> {
 #[test]
 fn all_files() -> Result<(), Box<dyn error::Error>> {
     let mut tre = process::Command::cargo_bin("tre")?;
-    let fixture_path: PathBuf = [
-        env!("CARGO_MANIFEST_DIR"),
-        "fixtures",
-    ].iter().collect();
+    let fixture_path: PathBuf = [env!("CARGO_MANIFEST_DIR"), "fixtures"].iter().collect();
     // this path is ignored by fixtures/.gitignore, but we aren't using .gitignore
-    let ignored_path: PathBuf = [
-        env!("CARGO_MANIFEST_DIR"),
-        "fixtures",
-        "ignore_me"
-    ].iter().collect();
+    let ignored_path: PathBuf = [env!("CARGO_MANIFEST_DIR"), "fixtures", "ignore_me"]
+        .iter()
+        .collect();
     fs::write(ignored_path, "")?;
     env::set_current_dir(fixture_path)?;
     let output = tre.arg("-a").output()?.stdout;
@@ -123,8 +108,16 @@ fn external_path_shows_contents() -> Result<(), Box<dyn error::Error>> {
     let text = str::from_utf8(&output)?;
 
     // Should show contents of the external directory
-    assert!(text.contains("test_file.txt"), "Should show test_file.txt, got: {}", text);
+    assert!(
+        text.contains("test_file.txt"),
+        "Should show test_file.txt, got: {}",
+        text
+    );
     assert!(text.contains("subdir"), "Should show subdir, got: {}", text);
-    assert!(text.contains("nested.txt"), "Should show nested.txt, got: {}", text);
+    assert!(
+        text.contains("nested.txt"),
+        "Should show nested.txt, got: {}",
+        text
+    );
     Ok(())
 }

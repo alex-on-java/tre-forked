@@ -1,5 +1,5 @@
-use slab::Slab;
 use indexmap::IndexMap;
+use slab::Slab;
 use std::fs::{self, Metadata};
 use std::path::{Component, Path, PathBuf};
 
@@ -393,7 +393,7 @@ mod test {
             let b_id = children.get("b").unwrap();
             let b = tree.get(*b_id);
             assert_eq!(b.total_descendants, 2); // c, d
-            assert_eq!(b.child_dir_count, 1);   // c
+            assert_eq!(b.child_dir_count, 1); // c
             assert_eq!(b.child_file_count, 0);
             assert!(b.is_skinny()); // only one dir child, no files
 
@@ -403,7 +403,7 @@ mod test {
                 let c = tree.get(*c_id);
                 assert_eq!(c.total_descendants, 1); // d
                 assert_eq!(c.child_dir_count, 0);
-                assert_eq!(c.child_file_count, 1);  // d
+                assert_eq!(c.child_file_count, 1); // d
                 assert!(!c.is_skinny()); // has a file, not a single dir
 
                 // Check 'd' file
