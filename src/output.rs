@@ -116,6 +116,9 @@ pub fn create_edit_aliases(editor: &str, entries: &[FormattedEntry]) {
     let powershell_alias = open_alias_file_with_suffix("ps1");
     if let Ok(mut alias_file) = powershell_alias {
         for (index, entry) in entries.iter().enumerate() {
+            if entry.virtual_entry {
+                continue;
+            }
             let editor = if editor.is_empty() {
                 "Start-Process"
             } else {
@@ -168,6 +171,9 @@ pub fn create_edit_aliases(editor: &str, entries: &[FormattedEntry]) {
     let alias = open_alias_file();
     if let Ok(mut alias_file) = alias {
         for (index, entry) in entries.iter().enumerate() {
+            if entry.virtual_entry {
+                continue;
+            }
             let result = writeln!(
                 &mut alias_file,
                 "alias e{}=\"eval '{} \\\"{}\\\"'\"",

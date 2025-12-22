@@ -178,6 +178,7 @@ OPTIONS:
     -h, --help                  Print help information
     -j, --json                  Output JSON instead of tree diagram
     -l, --limit <LIMIT>         Limit depth of the tree in output
+    -n, --lines <LINES>         Limit total number of lines with a smart, structure-aware layout
     -p, --portable              Generate portable (absolute) paths for editor aliases. By default,
                                 aliases use relative paths for better performance
     -s, --simple                Use normal print despite gitignore settings. '-a' has higher

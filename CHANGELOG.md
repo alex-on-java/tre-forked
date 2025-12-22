@@ -1,5 +1,7 @@
 # main
 
+- Add `-n/--lines` option with a smart, structure-aware line budgeting algorithm.
+
 # 0.4.0
 
 - Add M1 builds to release.
