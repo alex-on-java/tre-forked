@@ -112,7 +112,11 @@ pub fn run(option: RunOptions) {
             None => return,
         };
 
-        let format_result = diagram_formatting::format_tree(&tree, option.portable_aliases);
+        let format_result = if let Some(max_lines) = option.max_lines {
+            diagram_formatting::format_tree_smart_lines(&tree, option.portable_aliases, max_lines)
+        } else {
+            diagram_formatting::format_tree(&tree, option.portable_aliases)
+        };
         let lscolors = LsColors::from_env().unwrap_or_default();
         let coloring = match option.coloring {
             cli::Coloring::Never => None,
