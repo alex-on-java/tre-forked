@@ -103,8 +103,12 @@ pub fn run(option: RunOptions) {
     if option.output_json {
         println!("{}", json_formatting::format_paths(&option.root, paths));
     } else {
-        let format_result =
-            diagram_formatting::format_paths(&option.root, paths, option.portable_aliases);
+        let format_result = diagram_formatting::format_paths_with_limit(
+            &option.root,
+            paths,
+            option.portable_aliases,
+            option.max_lines,
+        );
         let lscolors = LsColors::from_env().unwrap_or_default();
         let coloring = match option.coloring {
             cli::Coloring::Never => None,
