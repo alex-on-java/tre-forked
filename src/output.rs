@@ -38,10 +38,14 @@ pub fn print_entries(entries: &[FormattedEntry], create_alias: bool, lscolors: O
             print!("{}", entry.prefix);
         }
 
-        let spec = lscolors.map(|c| {
-            c.style_for_path(&entry.path)
-                .map(convert_to_color_spec)
-                .unwrap_or_default()
+        let spec = lscolors.and_then(|c| {
+            if entry.virtual_entry {
+                None
+            } else {
+                c.style_for_path(&entry.path)
+                    .map(convert_to_color_spec)
+                    .or_else(|| Some(ColorSpec::new()))
+            }
         });
         color_print(&entry.name, spec.as_ref());
         println!()
@@ -116,6 +120,9 @@ pub fn create_edit_aliases(editor: &str, entries: &[FormattedEntry]) {
     let powershell_alias = open_alias_file_with_suffix("ps1");
     if let Ok(mut alias_file) = powershell_alias {
         for (index, entry) in entries.iter().enumerate() {
+            if entry.virtual_entry {
+                continue;
+            }
             let editor = if editor.is_empty() {
                 "Start-Process"
             } else {
@@ -136,6 +143,9 @@ pub fn create_edit_aliases(editor: &str, entries: &[FormattedEntry]) {
     let cmd_alias = open_alias_file_with_suffix("bat");
     if let Ok(mut alias_file) = cmd_alias {
         for (index, entry) in entries.iter().enumerate() {
+            if entry.virtual_entry {
+                continue;
+            }
             let editor = if editor.is_empty() { "START" } else { editor };
             let result = writeln!(
                 &mut alias_file,
@@ -168,6 +178,9 @@ pub fn create_edit_aliases(editor: &str, entries: &[FormattedEntry]) {
     let alias = open_alias_file();
     if let Ok(mut alias_file) = alias {
         for (index, entry) in entries.iter().enumerate() {
+            if entry.virtual_entry {
+                continue;
+            }
             let result = writeln!(
                 &mut alias_file,
                 "alias e{}=\"eval '{} \\\"{}\\\"'\"",
