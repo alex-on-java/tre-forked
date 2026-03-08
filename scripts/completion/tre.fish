@@ -1,5 +1,6 @@
 complete -c tre -s e -l editor -d 'Create aliases for each displayed result, and add a number in front of file name to indicate the alias name. For example, a number "42" means an shell alias "e42" has been created. Running "e42" will cause the associated file or directory to be open with $EDITOR (or a default program for the file type on Windows), or a command specified along with this command' -r
 complete -c tre -s l -l limit -d 'Limit depth of the tree in output' -r
+complete -c tre -s n -l lines -d 'Limit number of lines in output with smart allocation' -r
 complete -c tre -s E -l exclude -d 'Exclude paths matching a regex pattern. Repeatable' -r
 complete -c tre -s c -l color -d 'When to color the output. `automatic` means when printing to a terminal, tre will include colors; otherwise it will disable colors' -r -f -a "{automatic	,always	,never	}"
 complete -c tre -s h -l help -d 'Print help information'

@@ -25,6 +25,8 @@ Register-ArgumentCompleter -Native -CommandName 'tre' -ScriptBlock {
             [CompletionResult]::new('--editor', 'editor', [CompletionResultType]::ParameterName, 'Create aliases for each displayed result, and add a number in front of file name to indicate the alias name. For example, a number "42" means an shell alias "e42" has been created. Running "e42" will cause the associated file or directory to be open with $EDITOR (or a default program for the file type on Windows), or a command specified along with this command')
             [CompletionResult]::new('-l', 'l', [CompletionResultType]::ParameterName, 'Limit depth of the tree in output')
             [CompletionResult]::new('--limit', 'limit', [CompletionResultType]::ParameterName, 'Limit depth of the tree in output')
+            [CompletionResult]::new('-n', 'n', [CompletionResultType]::ParameterName, 'Limit number of lines in output with smart allocation')
+            [CompletionResult]::new('--lines', 'lines', [CompletionResultType]::ParameterName, 'Limit number of lines in output with smart allocation')
             [CompletionResult]::new('-E', 'E', [CompletionResultType]::ParameterName, 'Exclude paths matching a regex pattern. Repeatable')
             [CompletionResult]::new('--exclude', 'exclude', [CompletionResultType]::ParameterName, 'Exclude paths matching a regex pattern. Repeatable')
             [CompletionResult]::new('-c', 'c', [CompletionResultType]::ParameterName, 'When to color the output. `automatic` means when printing to a terminal, tre will include colors; otherwise it will disable colors')
