@@ -24,7 +24,6 @@ pub struct RunOptions {
     pub output_json: bool,
     pub root: String,
     pub max_depth: Option<usize>,
-    #[allow(dead_code)]
     pub max_lines: Option<usize>,
     pub exclude_patterns: Vec<Regex>,
     pub coloring: cli::Coloring,
@@ -112,7 +111,11 @@ pub fn run(option: RunOptions) {
             None => return,
         };
 
-        let format_result = diagram_formatting::format_tree(&tree, option.portable_aliases);
+        let format_result = if let Some(lines) = option.max_lines {
+            diagram_formatting::format_tree_with_budget(&tree, option.portable_aliases, lines)
+        } else {
+            diagram_formatting::format_tree(&tree, option.portable_aliases)
+        };
         let lscolors = LsColors::from_env().unwrap_or_default();
         let coloring = match option.coloring {
             cli::Coloring::Never => None,

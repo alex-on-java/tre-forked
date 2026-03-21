@@ -22,6 +22,8 @@ set edit:completion:arg-completer[tre] = {|@words|
             cand --editor 'Create aliases for each displayed result, and add a number in front of file name to indicate the alias name. For example, a number "42" means an shell alias "e42" has been created. Running "e42" will cause the associated file or directory to be open with $EDITOR (or a default program for the file type on Windows), or a command specified along with this command'
             cand -l 'Limit depth of the tree in output'
             cand --limit 'Limit depth of the tree in output'
+            cand -n 'Limit total number of lines in output (smart allocation)'
+            cand --lines 'Limit total number of lines in output (smart allocation)'
             cand -E 'Exclude paths matching a regex pattern. Repeatable'
             cand --exclude 'Exclude paths matching a regex pattern. Repeatable'
             cand -c 'When to color the output. `automatic` means when printing to a terminal, tre will include colors; otherwise it will disable colors'
